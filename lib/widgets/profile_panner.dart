@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import '../scoped_model/main_model.dart';
 
 import '../models/user.dart';
 
@@ -36,14 +38,16 @@ class _ProfileBannerState extends State<ProfileBanner> {
                 ),
                 buildNameDescription(),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    buildInfo('followers', '20K'),
-                    buildInfo('following', '12K'),
-                    buildInfo('likes', '500'),
-                  ],
-                )
+                ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      buildInfo('followers', model.uFollowers.toString()),
+                      buildInfo('Tweets', model.uTweets.toString()),
+                      buildInfo('likes', model.uLikes.toString()),
+                    ],
+                  );
+                })
               ],
             ),
           ),
@@ -102,6 +106,4 @@ class _ProfileBannerState extends State<ProfileBanner> {
       ),
     );
   }
-
-
 }

@@ -4,6 +4,7 @@ import 'dart:convert';
 import '../models/tweet.dart';
 import 'user_model.dart';
 import 'package:twitter/twitter.dart';
+import 'user_model.dart';
 
 mixin TweetModel on ConnectedModel {
   List<Tweet> _tweets = [];
@@ -12,6 +13,12 @@ mixin TweetModel on ConnectedModel {
   List<Tweet> get tweets => _tweets;
 
   List<Tweet> get profileTweets => _profileTweets;
+
+  // the worst practice ever made
+  // god please forgive me
+  int uFollowers = 0;
+  int uLikes = 0;
+  int uTweets = 0;
 
   Future<Null> getTweet() async {
     final String url =
@@ -24,7 +31,6 @@ mixin TweetModel on ConnectedModel {
     for (int i = 0; i < res.length; i++) {
       _tweets.add(Tweet.fromJson(res[i]));
     }
-
     notifyListeners();
     print("${_tweets.length} ++ ${_tweets[0].text}");
   }
@@ -36,12 +42,14 @@ mixin TweetModel on ConnectedModel {
         new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
     var response = await twitter.request("GET", url);
     var res = json.decode(response.body);
-    print(res.runtimeType);
+    uFollowers = res[0]['user']['followers_count'];
+    uLikes = res[0]['user']['favourites_count'];
+    uTweets = res[0]['user']['statuses_count'];
+    print('values $uFollowers - $uLikes - $uTweets}');
+    notifyListeners();
     for (int i = 0; i < res.length; i++) {
       _profileTweets.add(Tweet.fromJson(res[i]));
     }
-
-    notifyListeners();
     print("${_profileTweets.length} ++ ${_profileTweets[0].text}");
   }
 }

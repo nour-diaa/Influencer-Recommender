@@ -17,10 +17,10 @@ mixin ConnectedModel on Model {
 }
 
 mixin UserModel on ConnectedModel {
-  User _currentUser;
+  User currentUser;
   UserStatus _result = UserStatus.notLogged;
 
-  User get currentUser => _currentUser;
+
 
   UserStatus get result => _result;
 
@@ -36,7 +36,7 @@ mixin UserModel on ConnectedModel {
         print('${session.username}');
         mUserToken = session.token;
         mUserSecret = session.secret;
-        _currentUser = User(
+        currentUser = User(
             name: session.username,
             screenName: session.username,
             imageUrl:
@@ -60,18 +60,18 @@ mixin UserModel on ConnectedModel {
         new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
     var response = await twitter.request("GET", url);
     var res = json.decode(response.body);
-    _currentUser.name = res['name'];
+    currentUser.name = res['name'];
   }
 
   Future<Null> _getBanner() async {
     final String url =
-        'users/profile_banner.json?screen_name=${_currentUser.screenName}';
+        'users/profile_banner.json?screen_name=${currentUser.screenName}';
     Twitter twitter =
         new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
     var response = await twitter.request("GET", url);
     var res = json.decode(response.body);
     print('${res.toString()}  the screen name is here ');
-    _currentUser.banner = res['sizes']['web_retina']['url'];
+    currentUser.banner = res['sizes']['web_retina']['url'];
   }
 
 
