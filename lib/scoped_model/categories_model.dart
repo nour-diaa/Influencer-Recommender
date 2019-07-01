@@ -73,6 +73,7 @@ mixin CategoriesModel on Model {
     var ids = cats.split('#');
     ids.removeAt(0);
     print('ids ${ids.toString()}');
+    _selectedCategories.clear();
     for (String s in ids) {
       print('cats $s');
       _selectedCategories.add(_allCategories.firstWhere((category) {
