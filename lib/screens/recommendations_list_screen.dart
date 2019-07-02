@@ -52,7 +52,7 @@ class _RecommendationsListScreenState extends State<RecommendationsListScreen> {
                         ],
                       );
                     }
-                    return Center(child: CircularProgressIndicator());
+                    return CircularProgressIndicator();
                   })
             ],
           );

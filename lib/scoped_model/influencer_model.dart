@@ -16,6 +16,7 @@ mixin InfluencerModel on ConnectedModel {
 
   Influencer get activeInfluencer => _activeInfluencer;
   List<String> _selectedUserCategories = [];
+  List<String> friends = [];
 
   void selectInfluencer(int index) {
     _activeInfluencer = _influencers[index];
@@ -24,21 +25,42 @@ mixin InfluencerModel on ConnectedModel {
 
   Future<bool> initInfluencers() async {
     if (_influencers.length > 0) return true;
+    await getUserFriends();
+    print('got friends');
     await getUserCats();
     for (String cat in _selectedUserCategories) {
       final String url = Environment.influencersUrl + '/$cat';
-      print('request $cat: $url');
       http.Response response = await http.get(url);
-      print('request made  $cat');
       var res = json.decode(response.body);
-      print('request decoded  $cat');
       print(res.toString());
       for (var i in res) {
         _influencers.add(Influencer.fromJson(i));
       }
-      print('response parsed $cat');
     }
     return true;
+  }
+
+  getUserFriends() async {
+    String url =
+        'friends/list.json?screen_name=$mScreenName&count=50&skip_status=true&include_user_entities=false';
+    print('requeest url $url');
+    Twitter twitter =
+        new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
+    var response = await twitter.request("GET", url);
+    print('request sent');
+    var res = json.decode(response.body);
+    for (var i in res['users']) {
+      friends.add(i['screen_name']);
+    }
+    print(res.toString());
+  }
+
+  removeFriend(String screenName){
+    friends.remove(screenName);
+  }
+
+  addFriend(String screenName){
+    friends.add(screenName);
   }
 
   getUserCats() async {

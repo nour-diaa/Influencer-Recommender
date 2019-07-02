@@ -14,6 +14,7 @@ mixin ConnectedModel on Model {
 
   String mUserToken = '';
   String mUserSecret = '';
+  String mScreenName = '';
 }
 
 mixin UserModel on ConnectedModel {
@@ -36,6 +37,7 @@ mixin UserModel on ConnectedModel {
         print('${session.username}');
         mUserToken = session.token;
         mUserSecret = session.secret;
+        mScreenName = session.username;
         currentUser = User(
             name: session.username,
             screenName: session.username,

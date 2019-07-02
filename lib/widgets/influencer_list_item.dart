@@ -17,8 +17,6 @@ class InfluencerListItem extends StatefulWidget {
 }
 
 class _InfluencerListItemState extends State<InfluencerListItem> {
-  bool _isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
@@ -66,14 +64,23 @@ class _InfluencerListItemState extends State<InfluencerListItem> {
                     (BuildContext context, Widget child, MainModel model) {
                   return IconButton(
                       icon: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        model.friends.contains(widget.description)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                         color: Theme.of(context).primaryColor,
                       ),
                       onPressed: () {
                         // testing follow feature
-                       // TODO implement follow/ unfollow model.unFollow('trikaofficial');
+                        // TODO implement follow/ unfollow model.unFollow('trikaofficial');
+
                         setState(() {
-                          _isFavorite = !_isFavorite;
+                          if (model.friends.contains(widget.description)) {
+                            model.unFollow(widget.description);
+                            model.removeFriend(widget.description);
+                          } else {
+                            model.follow(widget.description);
+                            model.addFriend(widget.description);
+                          }
                         });
                       });
                 }),
@@ -92,13 +99,13 @@ class _InfluencerListItemState extends State<InfluencerListItem> {
                   border: Border.all(
                       width: 3, color: Theme.of(context).primaryColorDark)),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Image.network(
-                  widget.image,
-                  width: 60,
-                  height: 70,
-                  fit: BoxFit.cover,
-                ),
+                  borderRadius: BorderRadius.circular(5),
+                  child: Image.network(
+                    widget.image,
+                    width: 60,
+                    height: 70,
+                    fit: BoxFit.cover,
+                  ),
               ),
             ),
           ),
