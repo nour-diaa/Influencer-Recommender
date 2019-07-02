@@ -52,4 +52,49 @@ mixin TweetModel on ConnectedModel {
     }
     print("${_profileTweets.length} ++ ${_profileTweets[0].text}");
   }
+
+  retweet(String id) async{
+    final String url =
+        'statuses/retweet/$id.json';
+    Twitter twitter =
+    new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
+    var response = await twitter.request("POST", url);
+    var res = json.decode(response.body);
+    print('tweet retweeted ${res.toString()}');
+
+  }
+
+  unRetweet(String id) async{
+    final String url =
+        'statuses/unretweet/$id.json';
+    Twitter twitter =
+    new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
+    var response = await twitter.request("POST", url);
+    var res = json.decode(response.body);
+    print('tweet retweeted ${res.toString()}');
+
+  }
+
+  like(String id) async{
+    final String url =
+        'favorites/create.json?id=$id';
+    Twitter twitter =
+    new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
+    var response = await twitter.request("POST", url);
+    var res = json.decode(response.body);
+    print('tweet liked ${res.toString()}');
+
+  }
+
+
+  unLike(String id) async{
+    final String url =
+        'favorites/destroy.json?id=$id';
+    Twitter twitter =
+    new Twitter(mConsumerKey, mConsumerSecret, mUserToken, mUserSecret);
+    var response = await twitter.request("POST", url);
+    var res = json.decode(response.body);
+    print('tweet unliked ${res.toString()}');
+
+  }
 }

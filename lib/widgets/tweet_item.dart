@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-
+import 'package:scoped_model/scoped_model.dart';
+import '../scoped_model/main_model.dart';
 import '../models/tweet.dart';
 
 class TweetItem extends StatefulWidget {
@@ -15,6 +16,9 @@ class TweetItem extends StatefulWidget {
 class _TweetItemState extends State<TweetItem> {
   double _screenWidth;
   double _screenHeight;
+  bool isLiked = false;
+  bool isRetweet = false;
+  bool isChanged = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,18 +75,69 @@ class _TweetItemState extends State<TweetItem> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         IconButton(
-            icon: Icon(Icons.favorite, color: Colors.grey), onPressed: () {}),
+            icon:
+                Icon(Icons.favorite, color: isLiked ? Colors.red : Colors.grey),
+            onPressed: () {
+              isChanged = true;
+              MainModel model = ScopedModel.of<MainModel>(context);
+              if (isLiked) {
+                model.unLike(widget._tweet.id_str);
+                setState(() {
+                  isLiked = false;
+                });
+              } else {
+                model.like(widget._tweet.id_str);
+                setState(() {
+                  isLiked = true;
+                });
+              }
+            }),
         SizedBox(width: 4),
-        Text('${widget._tweet.favourites_count}',
+        Text('${getLikeNum(widget._tweet.favourites_count)}',
             style: TextStyle(color: Colors.grey)),
         SizedBox(width: 8),
         IconButton(
-            icon: Icon(Icons.repeat, color: Colors.grey), onPressed: () {}),
+            icon: Icon(Icons.repeat,
+                color: isRetweet ? Colors.green : Colors.grey),
+            onPressed: () {
+              isChanged = true;
+              MainModel model = ScopedModel.of<MainModel>(context);
+              if (isRetweet) {
+                model.unRetweet(widget._tweet.id_str);
+                setState(() {
+                  isRetweet = false;
+                });
+              } else {
+                model.retweet(widget._tweet.id_str);
+                setState(() {
+                  isRetweet = true;
+                });
+              }
+            }),
         SizedBox(width: 4),
-        Text('${widget._tweet.retweet_count}',
+        Text(
+            '${getRetweetNum(widget._tweet.retweet_count)}',
             style: TextStyle(color: Colors.grey)),
       ],
     );
+  }
+
+  int getRetweetNum(int count){
+    if(!isChanged)
+      return count;
+    if(isRetweet)
+      return ++count;
+    else
+      return count;
+  }
+
+  int getLikeNum(int count){
+    if(!isChanged)
+      return count;
+    if(isLiked)
+      return ++count;
+    else
+      return count;
   }
 
   Widget buildNameContainer() {
