@@ -26,7 +26,6 @@ class _CategoriesRouteState extends State<CategoriesRoute> {
             SizedBox(height: 20),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: CategoriesSearchField(),
             ),
             CategoriesGrid(),
           ],

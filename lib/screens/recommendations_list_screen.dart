@@ -35,7 +35,6 @@ class _RecommendationsListScreenState extends State<RecommendationsListScreen> {
                           SizedBox(height: 20),
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 25),
-                            child: InfluencersSearchField(),
                           ),
                           SizedBox(height: 20),
                           Center(

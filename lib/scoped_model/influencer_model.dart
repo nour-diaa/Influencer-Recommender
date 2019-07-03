@@ -23,7 +23,7 @@ mixin InfluencerModel on ConnectedModel {
   List<Tweet> get influencerTweets => _influencerTweets;
 
   void selectInfluencer(int index) {
-    _influencerTweets=[];
+    _influencerTweets = [];
     _activeInfluencer = _influencers[index];
     _getBanner();
     _getInfluncerProfileContentTweets();
@@ -36,9 +36,14 @@ mixin InfluencerModel on ConnectedModel {
     print('got friends');
     await getUserCats();
     for (String cat in _selectedUserCategories) {
-      final String url = Environment.influencersUrl + '/$cat';
-      http.Response response = await http.get(url);
+      String url = Environment.influencersUrl + '/$cat';
+      print('request influencer url $url');
+      http.Response response = await http.get(url).catchError((err) {
+        print(err.toString());
+
+      });
       var res = json.decode(response.body);
+      print('request influencer decoded');
       print(res.toString());
       for (var i in res) {
         _influencers.add(Influencer.fromJson(i));
@@ -139,7 +144,8 @@ mixin InfluencerModel on ConnectedModel {
         id_str: res[i]['id_str'],
         location: res[i]['user']['location'],
         name: _activeInfluencer.name,
-        profile_background_image_url_https: res[i]['user']['profile_background_image_url_https'],
+        profile_background_image_url_https: res[i]['user']
+            ['profile_background_image_url_https'],
         profile_image_url: _activeInfluencer.imageUrl,
         retweet_count: res[i]['retweet_count'],
         screen_name: _activeInfluencer.screenName,
@@ -148,6 +154,5 @@ mixin InfluencerModel on ConnectedModel {
         verified: true,
       ));
     }
-
   }
 }
