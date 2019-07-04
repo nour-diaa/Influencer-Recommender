@@ -50,6 +50,19 @@ mixin CategoriesModel on Model {
     notifyListeners();
   }
 
+  selectAllCats() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String value = '';
+    _selectedCategories.clear();
+    for (int i = 0; i < 23; i++) {
+      value += '#$i';
+      _selectedCategories.add(_allCategories[i]);
+    }
+    prefs.setString('cats', value);
+    print('added cats $value \n values ${_selectedCategories.toString()}');
+    notifyListeners();
+  }
+
   // ignore: slash_for_doc_comments
   /**
    *  removes all categories from the user favorite categories
@@ -59,6 +72,8 @@ mixin CategoriesModel on Model {
     _selectedCategories.clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('cats', '');
+    _selectedCategories.clear();
+    _selectedCategories.add(_allCategories[0]);
     notifyListeners();
   }
 

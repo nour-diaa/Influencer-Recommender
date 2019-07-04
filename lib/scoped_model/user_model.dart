@@ -9,8 +9,8 @@ import '../enums/user_status.dart';
 import '../models/user.dart';
 
 mixin ConnectedModel on Model {
-  String mConsumerKey = '0hIn29mjHlLdL8jqSG6gzThmZ';
-  String mConsumerSecret = 'Zd4xosLeh9goPV8lnxP1P9EdFBKTpjG0w2z6X734qmrv3oivQu';
+  String mConsumerKey = 'ADD_YOUR_COSUMERR_KEY';
+  String mConsumerSecret = 'ADD_YOUR_COSUMERR_SECRET';
 
   String mUserToken = '';
   String mUserSecret = '';
